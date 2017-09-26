@@ -1,13 +1,14 @@
-var scrolled=0; 
 $(document).ready(function() {
   $('.responsive tr.middle-header').prepend('<th class="cumulative-returns appendedth"></th>');
   var switched = false;
-  var updateTables = function() {
+  var updateTables = function(loadtype) {
+	 
     if (($(window).width() < 767) && !switched ){
       switched = true;
       $("table.responsive").each(function(i, element) {
         splitTable($(element));
       });
+	  
       return true;
     }
     else if (switched && ($(window).width() > 767)) {
@@ -16,31 +17,44 @@ $(document).ready(function() {
         unsplitTable($(element));
       });
     }
- 
-};
+	 if(loadtype!="onload" && !$('.scrollable').find('a').hasClass('handle')){
+	  $(".table-wrapper").each(function () { 
+			$(this).find('.scrollable').prepend(" <a href='#' class='handle left min' ></a> <a href='#' class='handle right' ></a>");
+		});
+	 }
+	 
+}; 
+   $(window).on('load',function() {
+      updateTables();	  
+	  $(".table-wrapper").each(function () { 
+			$(this).find('.scrollable').prepend(" <a href='#' class='handle left min' ></a> <a href='#' class='handle right' ></a>");
+	});
    
-  $(window).load(updateTables);
-  $(window).on("redraw",function(){switched=false;updateTables();}); // An event to listen for
-  $(window).on("resize", updateTables);
-   
-	
+ });
+  $(window).resize(function() {
+    updateTables('resize');   
+ });
+  $(window).on("redraw",function(){switched=false;updateTables('redraw');}); // An event to listen for
+  
+
 	function splitTable(original)
 	{
-		original.wrap("<div class='table-wrapper' />");
-		
+		original.wrap("<div class='table-wrapper' />");		
 		var copy = original.clone();
 		copy.find("td:not(:first-child), th:not(:first-child)").css("display", "none");
 		copy.removeClass("responsive");
 		
 		original.closest(".table-wrapper").append(copy);
 		copy.wrap("<div class='pinned' />");
-		original.wrap("<div class='scrollable'> <a href='#' class='handle left min' ></a> <a href='#' class='handle right' ></a></div>");
+		original.wrap("<div class='scrollable'> </div>");
 
-    setCellHeights(original, copy);
+		setCellHeights(original, copy);
+	
 	}
 	
 	function unsplitTable(original) {
     original.closest(".table-wrapper").find(".pinned").remove();
+	original.closest(".table-wrapper").find("a.handle").remove();
     original.unwrap();
     original.unwrap();
 	}
@@ -96,7 +110,7 @@ $(document).ready(function() {
 		});    
 
     $(".performance-page").delegate(".left", "click", function(e) {
-      e.preventDefault();
+		e.preventDefault();
         var leftPos2 =  $(this).parent().scrollLeft();  
         $(this).parent().animate({scrollLeft: leftPos2 - 50}, 200); 
 
@@ -104,11 +118,8 @@ $(document).ready(function() {
             $(this).parent().find('.left').addClass('min');
          }else  $(this).parent().find('.right').removeClass('max');
          
-		});
-
-    $(window).scroll(".scrollable", function() {
-      
-    });
+	});
+	   
 });
 
    
