@@ -1,0 +1,6 @@
+.performance-table th.overtoggle-wrapper{overflow:visible;top:18px;position:absolute;display:block !important;left:0px;}
+.performance-page div.table-wraper{    overflow:visible;}
+.performance-page  table.performance-table{margin-left:0px !important;}
+.pinned table.performance-table tr td a,.pinned table.performance-table tr th a{ display: block; width:100px; white-space:pre-line; line-height:18px; height:37px; overflow:hidden;}.performance-page  table.performance-table tr{ height:55px !important;}
+
+.pinned table.performance-table tr td a{ padding-top:5px !important; padding-bottom:0px !important;}
